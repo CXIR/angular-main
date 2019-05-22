@@ -53,11 +53,9 @@ export class Battle {
 
         if (this.firstPokemon.life > this.secondPokemon.life) {
 
-            //winner = this.firstPokemon.base.name;
             return this.firstPokemon;
         } else {
 
-            //winner = this.secondPokemon.base.name;
             return this.secondPokemon;
         }
     }
