@@ -1,6 +1,6 @@
 import {Base_pokemon} from "./base_pokemon";
 import {Statistiques} from "./statistiques";
-import * as PokemonService from "../services/pokemonAPI";
+import * as PokemonService from "../services/pokemon.service";
 
 export class Pokemon {
 
@@ -12,6 +12,7 @@ export class Pokemon {
 
     constructor(name: string, stat : Statistiques = new Statistiques()) {
         this.base = PokemonService.getPokemon(name);
+		console.log(this.base);
         this.IVStats = stat;
         this.level = 1;
         this.life = this.getHitPoints();
