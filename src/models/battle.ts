@@ -20,7 +20,6 @@ export class Battle {
 
         while(this.firstPokemon.life !== 0 && this.secondPokemon.life !== 0) {
 
-            //turn = this.tour
             if (this.isStopped) return; 
 
             if (this.tour % 2 === 0) {

@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { Pokemon }  from 'src/models/pokemon'
-import { Ability }  from 'src/models/abilily'
-import { Battle  }  from 'src/models/battle'
+import { AbilityLog }  from 'src/models/ability-log'
 
 import { BattleService } from 'src/services/battle.service'
 
@@ -17,36 +16,50 @@ export class ArenaComponent implements OnInit {
 
   winner : string
 
-  pokemon1 : Pokemon;
-  pokemon2 : Pokemon;
+  pokemon1 : Pokemon
+  pokemon2 : Pokemon
 
-  p1Attacks : Ability[] = [];
-  p2Attacks : Ability[] = [];
+  attacks   : AbilityLog[] = []
+  attack    : AbilityLog
 
-  battle : Battle;
-
-  toggle : boolean
-
+  stopped : boolean
   start : Date
+
+  data : object
 
   constructor(private battleService : BattleService) { }
 
   ngOnInit(){
-    this.pokemon1 = this.battleService.pokemon1
-    this.pokemon2 = this.battleService.pokemon2
+    this.pokemon1 = new Pokemon("Pikachu")
+    this.pokemon2 = new Pokemon("Raichu")
 
-    this.toggle = true
+    this.battleService.configureBattle(this.pokemon1, this.pokemon2)
+    this.stopped = true
   }
 
   actOnFight() {
 
     if(this.start == undefined) this.start = new Date()
 
-    this.toggle = !this.toggle
+    this.stopped = !this.stopped
+    
+    let data = this.battleService
+                    .fight(1000, this.stopped)
+                    .subscribe({
 
-    this.battleService.fight(this.p1Attacks, this.p2Attacks, this.toggle)
-    .then(win => {
-      if(win) this.winner = win
+      next : ability => {
+
+        this.attacks.push(ability)
+        this.attack = ability
+      },
+      complete : () => this.winner = this.battleService.winner.base.name
     })
+
+    if(this.stopped) data.unsubscribe()
+  }
+
+  pokemonProcessing(){
+
+    return 'text-muted'
   }
 }

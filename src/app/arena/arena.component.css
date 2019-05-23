@@ -1,0 +1,19 @@
+.box {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+.log{
+    width: 80%;
+}
+.action {
+    width: 20%;
+}
+.action .btn{
+    width: 100%;
+    padding-bottom: 0.6em;
+    padding-top: 0.6em;
+}
+.arena{
+    margin-top: 7em;
+}
