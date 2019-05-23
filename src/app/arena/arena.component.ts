@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Pokemon }  from 'src/models/pokemon'
-import { Ability }  from 'src/models/abilily'
-import { Battle  }  from 'src/models/battle'
+import { Pokemon } from 'src/models/pokemon';
+import { Attack } from 'src/models/attack';
+import { Battle  } from 'src/models/battle';
 
-import { BattleService } from 'src/services/battle.service'
+import { BattleService } from 'src/services/battle.service';
 
 @Component({
   selector: 'app-arena',
@@ -13,40 +13,40 @@ import { BattleService } from 'src/services/battle.service'
 })
 export class ArenaComponent implements OnInit {
 
-  title = 'Les Trois Cafés Gourmand'
+  title = 'Les Trois Cafés Gourmand';
 
-  winner : string
+  winner: string;
 
-  pokemon1 : Pokemon;
-  pokemon2 : Pokemon;
+  pokemon1: Pokemon;
+  pokemon2: Pokemon;
 
-  p1Attacks : Ability[] = [];
-  p2Attacks : Ability[] = [];
+  p1Attacks: Attack[] = [];
+  p2Attacks: Attack[] = [];
 
-  battle : Battle;
+  battle: Battle;
 
-  toggle : boolean
+  toggle: boolean;
 
-  start : Date
+  start: Date;
 
-  constructor(private battleService : BattleService) { }
+  constructor(private battleService: BattleService) { }
 
-  ngOnInit(){
-    this.pokemon1 = this.battleService.pokemon1
-    this.pokemon2 = this.battleService.pokemon2
+  ngOnInit() {
+    this.pokemon1 = this.battleService.pokemon1;
+    this.pokemon2 = this.battleService.pokemon2;
 
-    this.toggle = true
+    this.toggle = true;
   }
 
   actOnFight() {
 
-    if(this.start == undefined) this.start = new Date()
+    if (this.start == undefined) { this.start = new Date(); }
 
-    this.toggle = !this.toggle
+    this.toggle = !this.toggle;
 
     this.battleService.fight(this.p1Attacks, this.p2Attacks, this.toggle)
     .then(win => {
-      if(win) this.winner = win
-    })
+      if (win) { this.winner = win; }
+    });
   }
 }

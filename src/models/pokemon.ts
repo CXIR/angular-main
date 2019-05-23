@@ -1,111 +1,134 @@
-import {Base_pokemon} from "./base_pokemon";
-import {Statistiques} from "./statistiques";
-import * as PokemonService from "../services/pokemonAPI";
+import {BasePokemon} from './basePokemon';
+import {Statistiques} from './statistiques';
+import {Attack} from './attack';
+import * as PokemonService from '../services/pokemonAPI';
 
 export class Pokemon {
 
-    base : Base_pokemon;
+    base: BasePokemon;
+    nickname: string;
+    IVStats: Statistiques;
     level: number;
     life: number;
-    max_life: number;
-    private IVStats: Statistiques;
+    maxLife: number;
+    pp: number;
+    maxPP: number;
 
-    constructor(name: string, stat : Statistiques = new Statistiques()) {
-        this.base = PokemonService.getPokemon(name);
-        this.IVStats = stat;
+    constructor(name: string, nickname: string = '') {
+        /*PokemonService.getPokemonData(name, (basePokemon, err) => {
+           this.base = basePokemon;
+        });*/
+        this.nickname = nickname;
+        this.IVStats = this.generate_randomStats();
         this.level = 1;
+
         this.life = this.getHitPoints();
-        this.max_life = this.getHitPoints();
+        this.maxLife = this.getHitPoints();
+        this.pp = 100;
+        this.maxPP = 100;
     }
 
-    levelUp(level:number = 1) {
+    private generate_randomStats(min: number = 0, max: number = 31) {
+        return new Statistiques(Math.floor(Math.random() * max) + min,
+                                Math.floor(Math.random() * max) + min,
+                                Math.floor(Math.random() * max) + min,
+                                Math.floor(Math.random() * max) + min,
+                                Math.floor(Math.random() * max) + min,
+                                Math.floor(Math.random() * max) + min);
+    }
+
+    levelUp(level: number = 1) {
         this.level += level;
-        this.max_life = this.getHitPoints();
+        this.maxLife = this.getHitPoints();
+        this.maxPP += (10 * level);
         this.fullLife();
+        this.fullPP();
     }
 
     fullLife() {
-        this.life = this.max_life;
+        this.life = this.maxLife;
     }
 
-    getHitPoints():number {
+    fullPP() {
+        this.pp = this.maxPP;
+    }
 
-        let B : number = this.base.baseStats.H;
-        let I : number = this.IVStats.H;
-        let E : number = 1;
-        let L : number = this.level;
+    getHitPoints(): number {
+
+        const B: number = this.base.baseStats.hitPoints;
+        const I: number = this.IVStats.hitPoints;
+        const E: number = this.base.EVStats.hitPoints;
+        const L: number = this.level;
 
         return Math.floor((2 * B + I + E) * L / 100 + L + 10);
     }
 
-    getAttack():number {
+    getAttack(nature: number = 1): number {
 
-        let B : number = this.base.baseStats.A;
-        let I : number = this.IVStats.A;
-        let E : number = 1;
-        let L : number = this.level;
-        let N : number = 1;
-
-        return Math.floor(Math.floor((2 * B + I + E) * L / 100 + 5) * N);
-    }
-
-    getDefense():number {
-
-        let B : number = this.base.baseStats.B;
-        let I : number = this.IVStats.B;
-        let E : number = 1;
-        let L : number = this.level;
-        let N : number = 1;
+        const B: number = this.base.baseStats.attack;
+        const I: number = this.IVStats.attack;
+        const E: number = this.base.EVStats.attack;
+        const L: number = this.level;
+        const N: number = nature;
 
         return Math.floor(Math.floor((2 * B + I + E) * L / 100 + 5) * N);
     }
 
-    getSpecialAttack():number {
-
-        let B : number = this.base.baseStats.C;
-        let I : number = this.IVStats.C;
-        let E : number = 1;
-        let L : number = this.level;
-        let N : number = 1;
-
-        return Math.floor(Math.floor((2 * B + I + E) * L / 100 + 5) * N);
-    }
-
-    getSpecialDefense():number {
-
-        let B : number = this.base.baseStats.D;
-        let I : number = this.IVStats.D;
-        let E : number = 1;
-        let L : number = this.level;
-        let N : number = 1;
+    getDefense(nature: number = 1): number {
+        const B: number = this.base.baseStats.defense;
+        const I: number = this.IVStats.defense;
+        const E: number = this.base.EVStats.defense;
+        const L: number = this.level;
+        const N: number = nature;
 
         return Math.floor(Math.floor((2 * B + I + E) * L / 100 + 5) * N);
     }
 
-    getSpeed():number {
+    getSpecialAttack(nature: number = 1): number {
 
-        let B : number = this.base.baseStats.S;
-        let I : number = this.IVStats.S;
-        let E : number = 1;
-        let L : number = this.level;
-        let N : number = 1;
+        const B: number = this.base.baseStats.special_attack;
+        const I: number = this.IVStats.special_attack;
+        const E: number = this.base.EVStats.special_attack;
+        const L: number = this.level;
+        const N: number = nature;
 
         return Math.floor(Math.floor((2 * B + I + E) * L / 100 + 5) * N);
     }
 
+    getSpecialDefense(nature: number = 1): number {
 
-    attack(otherPokemon : Pokemon, bonus_attack: number = 1, isSpecial : boolean = false) {
+        const B: number = this.base.baseStats.special_defense;
+        const I: number = this.IVStats.special_defense;
+        const E: number = this.base.EVStats.special_attack;
+        const L: number = this.level;
+        const N: number = nature;
 
-        let L : number = this.level;
-        let A : number = isSpecial === false ? this.getAttack() : this.getSpecialAttack();
-        let P : number = bonus_attack;
-        let D : number = isSpecial === false ? otherPokemon.getDefense() : this.getSpecialDefense();
+        return Math.floor(Math.floor((2 * B + I + E) * L / 100 + 5) * N);
+    }
 
-        let damage : number = Math.floor(Math.floor(Math.floor(2 * L / 5 + 2) * A * P / D) / 50) + 2;
+    getSpeed(nature: number = 1): number {
+
+        const B: number = this.base.baseStats.speed;
+        const I: number = this.IVStats.speed;
+        const E: number = this.base.EVStats.speed;
+        const L: number = this.level;
+        const N: number = nature;
+
+        return Math.floor(Math.floor((2 * B + I + E) * L / 100 + 5) * N);
+    }
+
+    attack(otherPokemon: Pokemon, attack: Attack, isSpecial: boolean = false) {
+
+        this.pp -= attack.pp;
+
+        const L: number = this.level;
+        const A: number = isSpecial === false ? this.getAttack() : this.getSpecialAttack();
+        const P: number = attack.power;
+        const D: number = isSpecial === false ? otherPokemon.getDefense() : this.getSpecialDefense();
+
+        const damage: number = Math.floor(Math.floor(Math.floor(2 * L / 5 + 2) * A * P / D) / 50) + 2;
 
         otherPokemon.life -= damage;
-        if (otherPokemon.life < 0) otherPokemon.life = 0;
+        if (otherPokemon.life < 0) { otherPokemon.life = 0; }
     }
-
-
 }

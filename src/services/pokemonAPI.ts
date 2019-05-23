@@ -1,10 +1,10 @@
 import * as Pokedex from 'pokedex.js';
 
-import {Base_pokemon} from "../models/base_pokemon";
+import {BasePokemon} from '../models/basePokemon';
 
 const pokedex = new Pokedex('en');
 
-export function getPokemon(name:string) : Base_pokemon {
+export function getPokemon(name: string): BasePokemon {
     return JSON.parse(pokedex.name(name).get())[0];
 }
 
