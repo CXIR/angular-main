@@ -16,7 +16,7 @@ const routes: Routes = [
     component: RegistrationComponent
   },
   {
-    path: 'arena',
+    path: 'arena/:pokemon1name/:pokemon2name',
     component: ArenaComponent
   },
   {

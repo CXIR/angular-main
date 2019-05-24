@@ -1,11 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { Pokemon    }  from 'src/models/pokemon'
+import { Pokemon   }  from 'src/models/pokemon'
 import { AttackLog }  from 'src/models/attack-log'
 
-import { BattleService } from 'src/services/battle.service'
-import { Subscription  } from 'rxjs';
+import { BattleService  } from 'src/services/battle.service'
+import { Subscription   } from 'rxjs';
 import { PokemonService } from 'src/services/pokemon.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-arena',
@@ -34,10 +35,14 @@ export class ArenaComponent implements OnInit, OnDestroy {
   subscription : Subscription
 
   constructor( private battleService  : BattleService,
-               private pokemonService : PokemonService ) { }
+               private pokemonService : PokemonService,
+               private route          : ActivatedRoute ) { }
 
   ngOnInit(){
-    this.pokemonService.getOnePokemon('pikachu').subscribe({
+    let name1 = this.route.snapshot.paramMap.get('pokemon1name') || 'pikachu'
+    let name2 = this.route.snapshot.paramMap.get('pokemon2name') || 'raichu'
+
+    this.pokemonService.getOnePokemon(name1).subscribe({
       next: pokemon => {
         this.pokemon1 = new Pokemon(pokemon)
       },
@@ -46,7 +51,7 @@ export class ArenaComponent implements OnInit, OnDestroy {
       }
     })
 
-    this.pokemonService.getOnePokemon('raichu').subscribe({
+    this.pokemonService.getOnePokemon(name2).subscribe({
       next: pokemon => {
         this.pokemon2 = new Pokemon(pokemon)
       },
