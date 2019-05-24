@@ -1,23 +1,27 @@
 <section class="ml-5 mr-5">
-    <h6>Choissisez 2 Pokemon</h6>
+
+    <h4 class="text-info">Choissisez 2 Pokemon</h4>
 
     <div class="mt-4">
 
-      <div *ngIf="!collection" class="d-flex align-items-center">
-        <div class="spinner-grow ml-auto" role="status" aria-hidden="true"></div>
+      <div *ngIf="loading()" 
+            class="d-flex align-items-center mt-3 mb-3">
+        <div class="spinner-grow ml-auto" 
+             role="status" 
+             aria-hidden="true"></div>
       </div>
 
       <div *ngIf="collection">
 
         <div class="card bg-light ml-3 mr-3 mt-3 mb-3 float-left text-center" 
-            *ngFor="let pokemon of collection"
-            (click)="selectPokemon(pokemon)"
-            [ngClass]="pokemonSelected(pokemon)">
+             *ngFor="let pokemon of collection"
+             (click)="selectPokemon(pokemon)"
+             [ngClass]="pokemonSelected(pokemon)">
 
           <div class="card-body">
               <img [src]="pokemon.imgFront" height="150"/>
-              <h3>{{pokemon.name}}</h3>
-              <h4 class="text-muted">{{pokemon.type[0]}}</h4>
+              <h4>{{pokemon.name | titlecase}}</h4>
+              <h5 class="text-muted">{{pokemon.type[0]}}</h5>
           </div>
 
         </div>
