@@ -2,12 +2,9 @@ import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
 
 import { Pokemon } from 'src/models/pokemon'
-import { Ability } from 'src/models/abilily'
 import { AbilityLog } from 'src/models/ability-log';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class BattleService {
 
   pokemon1  : Pokemon
@@ -26,10 +23,9 @@ export class BattleService {
     this.tour     = 1
   }
 
-  fight(interval : number, toogle : boolean) {
+  fight(interval : number) {
 
     return new Observable<AbilityLog>(observer => {
-      this.isStopped = toogle
 
           setInterval(() => {
             if(!this.isStopped) {

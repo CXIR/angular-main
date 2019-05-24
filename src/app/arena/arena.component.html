@@ -34,9 +34,9 @@
 </section>
 
 <div class="box d-flex">
-        <div class="card bg-secondary log">
+        <div class="card bg-light log">
           <div class="card-body">
-            <h6 *ngIf="start"  class="card-title">Fight started at {{start | date:'HH:mm'}}</h6>
+            <h6 *ngIf="start"  class="card-title ml-4">Fight started at {{start | date:'HH:mm'}}</h6>
             <p  *ngIf="attack" class="text-center" [ngClass]="attack.color">{{attack.name}} attacks with {{attack.ability.name}}</p>
           </div>
         </div>

@@ -1,16 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { Pokemon }  from 'src/models/pokemon'
+import { Pokemon    }  from 'src/models/pokemon'
 import { AbilityLog }  from 'src/models/ability-log'
 
 import { BattleService } from 'src/services/battle.service'
+import { Subscription  } from 'rxjs';
+import { PokemonService } from 'src/services/pokemon.service';
 
 @Component({
   selector: 'app-arena',
   templateUrl: './arena.component.html',
-  styleUrls: ['./arena.component.css']
+  styleUrls: ['./arena.component.css'],
+  providers: [
+    BattleService,
+    PokemonService
+  ]
 })
-export class ArenaComponent implements OnInit {
+export class ArenaComponent implements OnInit, OnDestroy {
 
   title = 'Les Trois Cafés Gourmand'
 
@@ -23,11 +29,12 @@ export class ArenaComponent implements OnInit {
   attack    : AbilityLog
 
   stopped : boolean
-  start : Date
+  start   : Date
 
-  data : object
+  subscription : Subscription
 
-  constructor(private battleService : BattleService) { }
+  constructor( private battleService  : BattleService,
+               private pokemonService : PokemonService ) { }
 
   ngOnInit(){
     this.pokemon1 = new Pokemon("Pikachu")
@@ -40,26 +47,36 @@ export class ArenaComponent implements OnInit {
   actOnFight() {
 
     if(this.start == undefined) this.start = new Date()
-
-    this.stopped = !this.stopped
     
-    let data = this.battleService
-                    .fight(1000, this.stopped)
-                    .subscribe({
+    this.stopped = !this.stopped
+    this.battleService.isStopped = this.stopped
 
-      next : ability => {
+    if(!this.subscription) {
 
+      this.subscription = this.battleService
+      .fight(1000)
+      .subscribe({
+  
+        next : ability => {
+  
         this.attacks.push(ability)
         this.attack = ability
-      },
-      complete : () => this.winner = this.battleService.winner.base.name
-    })
-
-    if(this.stopped) data.unsubscribe()
+        },
+        complete : () => this.winner = this.battleService.winner.base.name
+        })
+    }
   }
 
   pokemonProcessing(){
-
     return 'text-muted'
+  }
+
+  ngOnDestroy(){
+
+    this.battleService.isStopped = true
+
+    if(this.subscription){
+      this.subscription.unsubscribe()
+    }
   }
 }
