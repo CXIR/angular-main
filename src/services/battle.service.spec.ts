@@ -19,14 +19,18 @@ describe('BattleService', () => {
   it('should win', async() => {
     const battle: BattleService = TestBed.get(BattleService);
 	const pokemon: PokemonService = TestBed.get(BattleService);
-	let pikachu: Pokemon = new Pokemon(pokemon.getOnePokemon('pikachu'));
-	let raichu: Pokemon = new Pokemon(pokemon.getOnePokemon('raichu'));
+	let basepikachu: BasePokemon;
+	let baseraichu: BasePokemon;
+	pokemon.getOnePokemon('pikachu').subscribe((data: BasePokemon) => basepikachu = data);
+	pokemon.getOnePokemon('raichu').subscribe((data: BasePokemon) => baseraichu = data);
+	let pikachu: Pokemon = new Pokemon(basepikachu);
+	let raichu: Pokemon = new Pokemon(baseraichu);
 
 
 	battle.configureBattle(pikachu, raichu);
 
 	battle.fight(2).subscribe((attacks: AttackLog) => {
-		expect(attacks).toBe('winner');
+		expect(attacks).toBe(undefined);
 	});
 
   });

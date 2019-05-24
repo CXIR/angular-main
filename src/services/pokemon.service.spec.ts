@@ -12,7 +12,7 @@ describe('PokemonService', () => {
 	it('should get a Pokemon', async() => {
       const pokemonService = TestBed.get(PokemonService);
 
-      pokemonService.getOnePokemon('pîkachu').subscribe(
+      pokemonService.getOnePokemon('pikachu').subscribe(
         (data: BasePokemon) =>{
   		  expect(data.name).toBe('pikachu');
   	  }
