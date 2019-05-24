@@ -4,13 +4,17 @@ import {PokemonService} from '../../services/pokemon.service';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+  providers: [
+    PokemonService
+  ]
 })
 export class HomeComponent implements OnInit {
 
   constructor(private pokemonService: PokemonService) {}
 
   ngOnInit() {
+    /*
     this.pokemonService.getPokemons().subscribe(
       data => console.log(data),
       err => console.log('ERR : ' + err),
@@ -18,9 +22,16 @@ export class HomeComponent implements OnInit {
     );
     this.pokemonService.getOnePokemon('pikachu').subscribe(
       data => console.log(data),
-      err => console.log(err),
+      err => console.log('ERR : ' + err),
       () => console.log('done loading pikachu')
     );
+    */
+    this.pokemonService.getAllPokemons().subscribe(
+      data => console.log(data),
+      err => console.log('ERR : ' + err),
+      () => console.log('done loading pikachu')
+    );
+
   }
 
 }

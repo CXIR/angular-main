@@ -1,17 +1,14 @@
 import {Injectable} from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {HttpClient} from '@angular/common/http';
 import {BasePokemon} from '../models/basePokemon';
+import {SpeciesPokemon} from '../models/speciesPokemon';
 import {Statistiques} from '../models/statistiques';
 import {Attack} from '../models/attack';
+import {map} from 'rxjs/operators';
+import * as pokemonGif from 'pokemon-gif';
 
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-};
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class PokemonService {
   baseURL: string;
   constructor(private http: HttpClient) {
@@ -19,13 +16,62 @@ export class PokemonService {
   }
 
   getPokemons() {
-    return this.http.get(this.baseURL + 'pokemon/');
+    return this.http.get(this.baseURL + 'pokemon/').toPromise();
+  }
+
+  getAllPokemons() {
+    this.getPokemons().then(res => {
+      
+    });
+    console.log(res);
   }
 
   getOnePokemon(name) {
-    return this.http.get<BasePokemon>(this.baseURL + 'pokemon/' + name);
+    return this.http.get(this.baseURL + 'pokemon/' + name).pipe(map(base => (
+      this.parseBasePokemon(base)
+    )));
   }
 
+  getPokemonSpecies(name) {
+    return this.http.get(this.baseURL + 'pokemon-species/' + name).pipe(map(species => (
+      this.parsePokemonSpecies(species)
+    )));
+  }
+
+  getAttack(name) {
+    return this.http.get(this.baseURL + 'move/' + name).pipe(map(attack => (
+      this.parseAttack(attack)
+    )));
+  }
+
+  parseBasePokemon = (base) => {
+    const baseStat = this.getPokemonBaseStat(base.stats);
+    const EVStat = this.getPokemonEVStat(base.stats);
+    const types = this.getPokemonTypes(base.types);
+    const colors = this.getColors(base.name);
+    const imgFront = base.sprites.front_default;
+    const imgBack = base.sprites.back_default;
+    const gif = pokemonGif(base.name);
+    const attacks = this.getPokemonAttacks(base.moves);
+    return new BasePokemon(base.id, base.name, types, colors, attacks, baseStat, EVStat, imgFront, imgBack, gif);
+  }
+
+  parseAttack = (attack) => {
+    const id = attack.id;
+    const name = attack.name;
+    const type = attack.type.name;
+    const pp = attack.pp;
+    const power = attack.power;
+    const accuracy = attack.accuracy;
+    return new Attack(id, name, type, pp, power, accuracy);
+  }
+
+  parsePokemonSpecies = (species) => {
+    const id = species.id;
+    const name = species.name;
+    const color = species.color.name;
+    return new SpeciesPokemon(id, name, color);
+  }
 
   getPokemonBaseStat(stats): Statistiques {
 
@@ -59,6 +105,7 @@ export class PokemonService {
     let S = 0;
 
     for (const stat of stats) {
+
       HP = stat.stat.name === 'hp' ? stat.effort : HP;
       A = stat.stat.name === 'attack' ? stat.effort : A;
       D = stat.stat.name === 'defense' ? stat.effort : D;
@@ -82,40 +129,18 @@ export class PokemonService {
     return data;
   }
 
-  getPokemonAbilities(abilities): Attack[] {
-
+  getPokemonAttacks(attacks): Attack[] {
     const data: Attack[] = [];
-
-    for (let i = 0; i < abilities.length; i++) {
-      let id = 0;
-      const name: string = abilities[i].move.name;
-      let type = '';
-      let pp = 0;
-      let power = 0;
-      let accuracy = 0;
-
-      pokedex.getMoveByName(name)
-        .then(function(response) {
-          id = response.id;
-          type = response.type.name;
-          pp = response.pp;
-          power = response.power;
-          accuracy = response.accuracy;
-        })
-        .catch(function(error) {
-          console.log('There was an ERROR: ', error);
-        });
-
-
-      const ability = new Attack(id, name, type, pp, power, accuracy);
-      data.push(ability);
+    for (const attack of attacks) {
+      const name = attack.move.name;
+      this.getAttack(name).subscribe(res => data.push(res));
     }
-
     return data;
   }
 
-
-
-
-
+  getColors(name): string[] {
+    const data: string[] = [];
+    this.getPokemonSpecies(name).subscribe(res => data.push(res.color));
+    return data;
+  }
 }

@@ -2,12 +2,6 @@ import {async, TestBed} from '@angular/core/testing';
 
 import { PokemonService } from './pokemon.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {Pokemon} from '../models/pokemon';
-import {BasePokemon} from '../models/basePokemon';
-import {HttpClient} from '@angular/common/http';
-
-
-
 
 describe('PokemonService', () => {
   beforeEach(() => TestBed.configureTestingModule({
