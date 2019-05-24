@@ -1,19 +1,19 @@
 export class Statistiques {
 
-    H : number;
-    A : number;
-    B : number;
-    C : number;
-    D : number;
-    S : number;
+    hitPoints: number;
+    attack: number;
+    defense: number;
+    special_defense: number;
+    special_attack: number;
+    speed: number;
 
-    constructor(H: number = 1, A: number = 1, B: number = 1, C: number = 1, D: number = 1, S: number = 1) {
-        this.H = H;
-        this.A = A;
-        this.B = B;
-        this.C = C;
-        this.D = D;
-        this.S = S;
+    constructor(hitPoints: number, attack: number, defense: number, special_defense: number, special_attack: number, speed: number) {
+        this.hitPoints = hitPoints;
+        this.attack = attack;
+        this.defense = defense;
+        this.special_defense = special_defense;
+        this.special_attack = special_attack;
+        this.speed = speed;
     }
 
 }

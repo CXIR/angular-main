@@ -10,8 +10,8 @@
       <div class="form-group">
         <input type="file" class="form-control" />
       </div>
-      <button type="button" class="btn btn-success btn-sm float-right ml-3">Enregistrer</button>
-      <button type="button" class="btn btn-danger btn-sm float-right">Effacer</button>
+      <button type="button" class="btn btn-success btn-sm float-right ml-3" [ngClass]="fighting()">Enregistrer</button>
+      <button type="button" class="btn btn-danger btn-sm float-right" [ngClass]="notFighting()">Effacer</button>
     </form>
 </section>
 

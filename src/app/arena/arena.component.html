@@ -1,64 +1,55 @@
 <title>{{title}}</title>
 
-<section class="ml-4 mr-4 mt-4">
+<section>
 
-  <h2 class="text-info text-center mt-5 mb-1">{{pokemon1.base.name}} vs {{pokemon2.base.name}}</h2>
-  <h4 *ngIf="winner" class="text-danger text-center mb-4">{{winner}} a remporté le Combat!</h4>
+  <div class="arena text-center"
+        *ngIf="winner">     
 
-  <div class="row d-flex">
-
-    <div class="col">
-      <div class=" text-center">
-          <img src="../../assets/images/pikachu.png" height="150"/>
-          <h3>{{pokemon1.base.name}}</h3>
-          <h4 class="text-muted">{{pokemon1.life}} points</h4>
-      </div>
-    </div>
-
-    <div class="col align-middle text-center align-self-center">
-      <button *ngIf="toggle" type="button" class="btn btn-info btn-lg" (click)="actOnFight()">Fight !</button>
-      <button *ngIf="!toggle" type="button" class="btn btn-danger btn-lg" (click)="actOnFight()">Stop !</button>
-      <p *ngIf="start">{{start | date:'dd MMMM yyyy'}}</p>
-    </div>
-
-    <div class="col">
-      <div class="text-center">
-        <img src="../../assets/images/raichu.png" height="150" />
-        <h3>{{pokemon2.base.name}}</h3>
-        <h4 class="text-muted">{{pokemon2.life}} points</h4>
-      </div>
-    </div>
-
+        <img [src]="winner.base.imgFront" height="300"/> 
+        <h4  class="text-danger text-center mb-4">{{winner.base.name | titlecase}} wins Fight!</h4>
   </div>
 
-  <div class="clearfix"></div>
+  <div class="arena"
+        *ngIf="!winner">
 
-  <div class="row">
-
-    <!-- pokemon 1 attacks-->
-    <div class="col align-centre">
-      <table class="">
-        <tbody>
-          <tr *ngFor="let attack of p1Attacks">
-            <td>{{attack.name}}</td>
-          </tr>
-        </tbody>
-      </table>
+    <div *ngIf="pokemon1" class="float-right w-50 d-flex flex-row-reverse">
+        <img [src]="pokemon1.base.imgFront" height="200"/>
+        <div class="align-self-center mr-4">
+            <h3>{{pokemon1.base.name | titlecase}}</h3>
+            <h4 class="text-muted">{{pokemon1.life}} pts</h4>
+        </div>
     </div>
 
-    <div class="col"></div>
+    <div class="clearfix"></div>
 
-    <!-- pokemon 2 attacks-->
-    <div class="col">
-      <table class="">
-          <tbody>
-            <tr *ngFor="let attack of p2Attacks">
-              <td>{{attack.name}}</td>
-            </tr>
-          </tbody>
-        </table>
+    <div *ngIf="pokemon2" class="float-left w-50 d-flex flex-row">
+        <img [src]="pokemon2.base.imgBack" height="200"/>
+        <div class="align-self-center ml-5">
+            <h3>{{pokemon2.base.name | titlecase}}</h3>
+            <h4 class="text-muted">{{pokemon2.life}} pts</h4>
+        </div>
     </div>
-    
   </div>
-  
+
 </section>
+
+<div class="box d-flex">
+        <div class="card bg-light log">
+          <div class="card-body">
+            <h6 *ngIf="start"  class="card-title ml-4">Fight started at {{start | date:'HH:mm'}}</h6>
+            <p  *ngIf="log" class="text-center" [ngStyle]="setColor(log.color)">{{log.name | titlecase}} attacks with {{log.attack.name}}</p>
+          </div>
+        </div>
+
+        <div class="action">
+            <button type="button" 
+                    class="btn btn-success btn-lg mr-0 align-self-stretch"
+                    [disabled]="!stopped" 
+                    (click)="actOnFight(true)">Fight</button>
+            <br/>
+            <button type="button" 
+                    class="btn btn-danger btn-lg mr-0 align-self-stretch" 
+                    [disabled]="stopped"
+                    (click)="actOnFight(false)" >Stop</button>
+        </div>
+  </div>
