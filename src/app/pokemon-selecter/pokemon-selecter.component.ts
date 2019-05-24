@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Pokemon } from 'src/models/pokemon';
-import { PokemonService } from 'src/services/pokemon.service';
-import { BasePokemon } from 'src/models/basePokemon';
+import {Component, OnInit} from '@angular/core';
+import {PokemonService} from 'src/services/pokemon.service';
+import {BasePokemon} from 'src/models/basePokemon';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-pokemon-selecter',
@@ -13,51 +13,50 @@ import { BasePokemon } from 'src/models/basePokemon';
 })
 export class PokemonSelecterComponent implements OnInit {
 
-  collection : BasePokemon[] = []
+  collection: BasePokemon[] = [];
 
-  pokemon1 : Pokemon
-  pokemon2 : Pokemon
+  pokemon1: BasePokemon;
+  pokemon2: BasePokemon;
 
-  constructor(private pokemonService : PokemonService) { }
+  constructor(private pokemonService: PokemonService,
+              private router: Router) { }
 
   ngOnInit() {
 
     this.pokemonService.getPokemonsNames().subscribe({
       next: pokemonNames => {
 
-        for(let name of pokemonNames){
+        for (const name of pokemonNames) {
 
           this.pokemonService.getOnePokemon(name).subscribe({
             next: pokemon => {
-              
-              //this.collection.push(pokemon)
-              console.log(pokemon)
+
+              this.collection.push(pokemon);
             }
-          })
+          });
         }
       }
-    })
+    });
   }
 
-  selectPokemon(pokemon : Pokemon){
+  selectPokemon(pokemon: BasePokemon) {
 
-    if(!this.pokemon1) this.pokemon1 = pokemon
-    else if(!this.pokemon2) {
-      this.pokemon2 = pokemon
+    if (!this.pokemon1) { this.pokemon1 = pokemon; } else if (!this.pokemon2) {
+      this.pokemon2 = pokemon;
 
-      //ArenaComponent(pokemon1, pokemon2)
+      this.router.navigateByUrl('/arena/' + this.pokemon1.name + '/' + this.pokemon2.name);
     }
   }
 
-  pokemonSelected(pokemon : Pokemon){
+  pokemonSelected(pokemon: BasePokemon) {
 
-    if(pokemon == this.pokemon1 || pokemon == this.pokemon2) {
-      return 'border-info'
+    if (pokemon === this.pokemon1 || pokemon === this.pokemon2) {
+      return 'border-info';
     }
   }
 
-  collectionIsEmpty(){
-    return this.collection.length > 0 ? false : true
+  collectionIsEmpty() {
+    return this.collection.length > 0 ? false : true;
   }
 
 }

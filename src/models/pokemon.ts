@@ -1,7 +1,6 @@
 import {BasePokemon} from './basePokemon';
 import {Statistiques} from './statistiques';
 import {Attack} from './attack';
-import * as PokemonService from '../services/pokemonAPI';
 
 export class Pokemon {
 

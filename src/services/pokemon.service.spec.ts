@@ -20,19 +20,19 @@ describe('PokemonService', () => {
 
     });
 
-  // it('should get all Pokemons', async() => {
-  //   const pokemonService = TestBed.get(PokemonService);
-  //
-  //   let result = [];
-  //   pokemonService.getPokemons().subscribe(
-  //     data => result = data.results,
-  //     err => console.log('ERR : ' + err),
-  //     () => console.log('done loading foods')
-  //   );
-  //   expect(result.length).toBe(974);
-  //   console.log(result);
-  //
-  // });
+  it('should get all Pokemons', async() => {
+    const pokemonService = TestBed.get(PokemonService);
+
+    let result = [];
+    pokemonService.getPokemonsNames().subscribe(
+      data => result = data.results,
+      err => console.log('ERR : ' + err),
+      () => console.log('done loading foods')
+    );
+    expect(result.length).toBe(974);
+    console.log(result);
+
+  });
 
 
 });
