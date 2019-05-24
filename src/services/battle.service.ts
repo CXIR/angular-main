@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
 
 import { Pokemon } from 'src/models/pokemon'
-import { AbilityLog } from 'src/models/ability-log';
+import { AttackLog } from 'src/models/attack-log';
+import { Attack } from 'src/models/attack';
 
 @Injectable()
 export class BattleService {
@@ -25,9 +26,10 @@ export class BattleService {
 
   fight(interval : number) {
 
-    return new Observable<AbilityLog>(observer => {
+    return new Observable<AttackLog>(observer => {
 
           setInterval(() => {
+
             if(!this.isStopped) {
               if(this.pokemon1.life !== 0 && this.pokemon2.life !== 0) {
 
@@ -42,30 +44,32 @@ export class BattleService {
     })
   }
 
-  attack() : AbilityLog {
+  attack() : AttackLog {
 
-    let log : AbilityLog
+    let log : AttackLog
 
     if (this.tour % 2 === 0) {
 
       let min : number  = 0
-      let max : number  = this.pokemon2.base.ability.length - 1
+      let max : number  = this.pokemon2.base.attacks.length - 1
 
-      let ability = this.pokemon2.base.ability[ this.randomNumber(min, max) ]
+      let attack = this.pokemon2.base.attacks[ this.randomNumber(min, max) ]
       this.cursor = 2
-      this.pokemon2.attack(this.pokemon1, ability.name.length, this.isSpecial())
+      this.pokemon2.attack(this.pokemon1, attack, this.isSpecial())
 
-      log = new AbilityLog(this.pokemon2.base.name, 'text-warning', ability)
+      log = new AttackLog(this.pokemon2.base.name, this.pokemon2.base.colors[0], attack)
+      console.log(this.pokemon2.base.colors[0])
     } 
     else {
         let min : number  = 0
-        let max : number  = this.pokemon1.base.ability.length - 1
+        let max : number  = this.pokemon1.base.attacks.length - 1
 
-        let ability = this.pokemon1.base.ability[ this.randomNumber(min, max) ]
+        let attack = this.pokemon1.base.attacks[ this.randomNumber(min, max) ]
         this.cursor = 1
-        this.pokemon1.attack(this.pokemon2, ability.name.length, this.isSpecial())
+        this.pokemon1.attack(this.pokemon2, attack, this.isSpecial())
 
-        log = new AbilityLog(this.pokemon1.base.name, 'text-primary', ability)
+        log = new AttackLog(this.pokemon1.base.name, this.pokemon1.base.colors[0], attack)
+        console.log(this.pokemon1.base.colors[0])
     }
     this.tour += 1
 

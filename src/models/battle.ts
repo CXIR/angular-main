@@ -1,65 +1,62 @@
-import {Pokemon} from "./pokemon";
-import {Ability} from "./abilily";
-import { delay } from 'q';
+import {Pokemon} from './pokemon';
+import {Attack} from './attack';
 
 export class Battle {
 
-    firstPokemon : Pokemon;
-    secondPokemon : Pokemon;
+    firstPokemon: Pokemon;
+    secondPokemon: Pokemon;
     tour: number;
-    isStopped = true;
+    isStopped: boolean;
 
     constructor(PokemonA: Pokemon, PokemonB: Pokemon) {
-        this.firstPokemon = PokemonA.level <= PokemonB.level ? PokemonA : PokemonB;
-        this.secondPokemon = PokemonA.level <= PokemonB.level ? PokemonB : PokemonA;
+        this.firstPokemon = PokemonA.getSpeed() <= PokemonA.getSpeed() ? PokemonA : PokemonB;
+        this.secondPokemon = PokemonA.getSpeed() <= PokemonB.getSpeed() ? PokemonB : PokemonA;
         this.tour = 1;
     }
 
 
-    async fight(attacks1 : Ability[], attacks2 : Ability[]) : Promise<Pokemon> {
+    fight(): Pokemon {
+        while (this.firstPokemon.life !== 0 && this.secondPokemon.life !== 0) {
 
-        while(this.firstPokemon.life !== 0 && this.secondPokemon.life !== 0) {
-
-            if (this.isStopped) return; 
+            console.log('Tour n°' + this.tour.toString() + ':');
 
             if (this.tour % 2 === 0) {
+                const attack: Attack = this.getAttack(this.secondPokemon.base.attacks);
+                const isSpecial: boolean = Boolean(Math.round(Math.random()));
 
-                let min : number = 0;
-                let max : number = this.secondPokemon.base.ability.length-1;
-                let random_num : number = Math.floor(Math.random() * (+max - +min)) + +min;
-                let ability : Ability = this.secondPokemon.base.ability[random_num];
-                let isSpecial : boolean = Boolean(Math.round(Math.random()));
+                this.secondPokemon.attack(this.firstPokemon, attack, isSpecial);
+                console.log(this.secondPokemon.base.name + ' lance une attaque "' + attack.name + '" sur ' + this.firstPokemon.base.name);
+            } else {
+                const attack: Attack = this.getAttack(this.firstPokemon.base.attacks);
+                const isSpecial: boolean = Boolean(Math.round(Math.random()));
 
-                this.secondPokemon.attack(this.firstPokemon, ability.name.length, isSpecial);
-                
-                attacks2.push(ability);
-            } 
-            else {
-                let min : number = 0;
-                let max : number = this.firstPokemon.base.ability.length-1;
-                let random_num : number = Math.floor(Math.random() * (+max - +min)) + +min;
-                let ability : Ability = this.firstPokemon.base.ability[random_num];
-                let isSpecial : boolean = Boolean(Math.round(Math.random()));
-
-                this.firstPokemon.attack(this.secondPokemon, ability.name.length, isSpecial);
-                
-                attacks1.push(ability);
+                this.firstPokemon.attack(this.secondPokemon, attack, isSpecial);
+                console.log(this.firstPokemon.base.name + ' lance une attaque "' + attack.name + '" sur ' + this.secondPokemon.base.name);
             }
 
+            console.log(this.firstPokemon.base.name + ' - PV : ' + this.firstPokemon.life.toString());
+            console.log(this.secondPokemon.base.name + ' - PV : ' + this.secondPokemon.life.toString());
+
             this.tour += 1;
-            await delay(1000);
         }
 
         if (this.firstPokemon.life > this.secondPokemon.life) {
-
+            console.log('Le gagnant est : ' + this.firstPokemon.base.name);
             return this.firstPokemon;
         } else {
-
+            console.log('Le gagnant est : ' + this.secondPokemon.base.name);
             return this.secondPokemon;
         }
+
     }
 
-    delay(ms: number) {
-        return new Promise( resolve => setTimeout(resolve, ms) );
+    private getAttack(attacks): Attack {
+        const min = 0;
+        const max: number = attacks.length - 1;
+        const i: number = Math.floor(Math.random() * max) + min;
+        return attacks[i];
     }
+
+
+
 }

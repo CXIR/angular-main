@@ -3,18 +3,26 @@
 
     <div class="mt-4">
 
+      <div *ngIf="!collection" class="d-flex align-items-center">
+        <div class="spinner-grow ml-auto" role="status" aria-hidden="true"></div>
+      </div>
+
+      <div *ngIf="collection">
+
         <div class="card bg-light ml-3 mr-3 float-left text-center" 
-             *ngFor="let pokemon of collection"
-             (click)="selectPokemon(pokemon)"
-             [ngClass]="pokemonSelected(pokemon)">
+            *ngFor="let pokemon of collection"
+            (click)="selectPokemon(pokemon)"
+            [ngClass]="pokemonSelected(pokemon)">
 
           <div class="card-body">
-              <img [src]="pokemon.media" height="150"/>
+              <img [src]="pokemon.base.frontImg" height="150"/>
               <h3>{{pokemon.base.name}}</h3>
               <h4 class="text-muted">{{pokemon.life}} points</h4>
           </div>
 
         </div>
+
+      </div>
       
       </div>
 </section>

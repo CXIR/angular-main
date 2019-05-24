@@ -1,7 +1,8 @@
 .box {
     position: fixed;
     bottom: 0;
-    width: 100%;
+    width: 60%;
+    margin-left: 20%;
 }
 .log{
     width: 80%;
@@ -19,4 +20,9 @@
 }
 .arena{
     margin-top: 7em;
+}
+
+section {
+    width       : 60%;
+    margin-left : 20%;
 }

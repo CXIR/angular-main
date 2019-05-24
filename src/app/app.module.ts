@@ -7,7 +7,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { ArenaComponent } from './arena/arena.component';
 import { PokemonSelecterComponent } from './pokemon-selecter/pokemon-selecter.component';
-import { HomeComponent } from './home/home.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -15,12 +15,12 @@ import { HomeComponent } from './home/home.component';
     NavbarComponent,
     RegistrationComponent,
     ArenaComponent,
-    PokemonSelecterComponent,
-    HomeComponent
+    PokemonSelecterComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

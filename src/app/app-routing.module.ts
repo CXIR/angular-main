@@ -1,14 +1,14 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { NgModule              } from '@angular/core';
+import { Routes, RouterModule  } from '@angular/router';
 import { RegistrationComponent } from './registration/registration.component';
-import { ArenaComponent } from './arena/arena.component';
+
+import { ArenaComponent           } from './arena/arena.component';
 import { PokemonSelecterComponent } from './pokemon-selecter/pokemon-selecter.component';
-import { HomeComponent } from './home/home.component';
 
 const routes: Routes = [
   {
     path       : '',
-    redirectTo :'home',
+    redirectTo :'catalog',
     pathMatch  :'full'
   },
   {
@@ -18,10 +18,6 @@ const routes: Routes = [
   {
     path: 'arena',
     component: ArenaComponent
-  },
-  {
-    path: 'home',
-    component: HomeComponent
   },
   {
     path: 'catalog',

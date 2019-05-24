@@ -1,31 +1,31 @@
 <title>{{title}}</title>
 
-<section class="ml-4 mr-4 mt-4">
+<section>
 
   <div class="arena text-center"
         *ngIf="winner">     
-        <!-- winner.media -->
-        <img src="../../assets/images/pikachu.png" height="200"/> 
-        <h4 *ngIf="winner" class="text-danger text-center mb-4">{{winner}} wins Fight!</h4>
+
+        <img [src]="winner.base.imgFront" height="300"/> 
+        <h4  class="text-danger text-center mb-4">{{winner.base.name | titlecase}} wins Fight!</h4>
   </div>
 
   <div class="arena"
         *ngIf="!winner">
 
-    <div class="float-right w-50 d-flex flex-row-reverse">
-        <img src="../../assets/images/pikachu.png" height="150"/>
+    <div *ngIf="pokemon1" class="float-right w-50 d-flex flex-row-reverse">
+        <img [src]="pokemon1.base.imgFront" height="200"/>
         <div class="align-self-center mr-4">
-            <h3>{{pokemon1.base.name}}</h3>
+            <h3>{{pokemon1.base.name | titlecase}}</h3>
             <h4 class="text-muted">{{pokemon1.life}} pts</h4>
         </div>
     </div>
 
     <div class="clearfix"></div>
 
-    <div class="float-left w-50 d-flex flex-row">
-        <img src="../../assets/images/raichu.png" height="150"/>
+    <div *ngIf="pokemon2" class="float-left w-50 d-flex flex-row">
+        <img [src]="pokemon2.base.imgBack" height="200"/>
         <div class="align-self-center ml-5">
-            <h3>{{pokemon2.base.name}}</h3>
+            <h3>{{pokemon2.base.name | titlecase}}</h3>
             <h4 class="text-muted">{{pokemon2.life}} pts</h4>
         </div>
     </div>
@@ -37,7 +37,7 @@
         <div class="card bg-light log">
           <div class="card-body">
             <h6 *ngIf="start"  class="card-title ml-4">Fight started at {{start | date:'HH:mm'}}</h6>
-            <p  *ngIf="attack" class="text-center" [ngClass]="attack.color">{{attack.name}} attacks with {{attack.ability.name}}</p>
+            <p  *ngIf="log" class="text-center" [ngStyle]="setColor(log.color)">{{log.name | titlecase}} attacks with {{log.attack.name}}</p>
           </div>
         </div>
 

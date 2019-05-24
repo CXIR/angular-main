@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { Pokemon    }  from 'src/models/pokemon'
-import { AbilityLog }  from 'src/models/ability-log'
+import { AttackLog }  from 'src/models/attack-log'
 
 import { BattleService } from 'src/services/battle.service'
 import { Subscription  } from 'rxjs';
@@ -20,13 +20,13 @@ export class ArenaComponent implements OnInit, OnDestroy {
 
   title = 'Les Trois Cafés Gourmand'
 
-  winner : string
+  winner : Pokemon
 
   pokemon1 : Pokemon
   pokemon2 : Pokemon
 
-  attacks   : AbilityLog[] = []
-  attack    : AbilityLog
+  attacks   : AttackLog[] = []
+  log       : AttackLog
 
   stopped : boolean
   start   : Date
@@ -37,11 +37,32 @@ export class ArenaComponent implements OnInit, OnDestroy {
                private pokemonService : PokemonService ) { }
 
   ngOnInit(){
-    this.pokemon1 = new Pokemon("Pikachu")
-    this.pokemon2 = new Pokemon("Raichu")
+    this.pokemonService.getOnePokemon('pikachu').subscribe({
+      next: pokemon => {
+        this.pokemon1 = new Pokemon(pokemon)
+      },
+      complete: () => {
+        this. configureBattle()
+      }
+    })
 
-    this.battleService.configureBattle(this.pokemon1, this.pokemon2)
+    this.pokemonService.getOnePokemon('raichu').subscribe({
+      next: pokemon => {
+        this.pokemon2 = new Pokemon(pokemon)
+      },
+      complete: () => {
+        this. configureBattle()
+      }
+    })
+
     this.stopped = true
+  }
+
+  configureBattle(){
+
+    if(this.pokemon1 && this.pokemon2) {
+      this.battleService.configureBattle(this.pokemon1, this.pokemon2)
+    }
   }
 
   actOnFight() {
@@ -57,19 +78,20 @@ export class ArenaComponent implements OnInit, OnDestroy {
       .fight(1000)
       .subscribe({
   
-        next : ability => {
+        next : log => {
   
-        this.attacks.push(ability)
-        this.attack = ability
+        this.attacks.push(log)
+        this.log = log
         },
-        complete : () => this.winner = this.battleService.winner.base.name
+        complete : () => this.winner = this.battleService.winner
         })
     }
   }
 
-  pokemonProcessing(){
-    return 'text-muted'
+  setColor(color : string){
+    return { 'color' : color }
   }
+
 
   ngOnDestroy(){
 
