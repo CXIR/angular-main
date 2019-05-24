@@ -5,7 +5,6 @@ import {SpeciesPokemon} from '../models/speciesPokemon';
 import {Statistiques} from '../models/statistiques';
 import {Attack} from '../models/attack';
 import {map} from 'rxjs/operators';
-import * as pokemonGif from 'pokemon-gif';
 
 
 @Injectable()
@@ -16,14 +15,19 @@ export class PokemonService {
   }
 
   getPokemons() {
-    return this.http.get(this.baseURL + 'pokemon/').toPromise();
+    return this.http.get(this.baseURL + 'generation/1').pipe(map(data => (
+      this.parseList(data)
+    )));
   }
 
-  getAllPokemons() {
-    this.getPokemons().then(res => {
-      
-    });
-    console.log(res);
+  parseList(data) {
+    const pokemons: BasePokemon[] = [];
+    const results = data.pokemon_species;
+    for (const res of results) {
+      const p = this.getOnePokemon(res.name);
+      p.toPromise().then(response => pokemons.push(response));
+    }
+    return pokemons;
   }
 
   getOnePokemon(name) {
@@ -51,9 +55,8 @@ export class PokemonService {
     const colors = this.getColors(base.name);
     const imgFront = base.sprites.front_default;
     const imgBack = base.sprites.back_default;
-    const gif = pokemonGif(base.name);
     const attacks = this.getPokemonAttacks(base.moves);
-    return new BasePokemon(base.id, base.name, types, colors, attacks, baseStat, EVStat, imgFront, imgBack, gif);
+    return new BasePokemon(base.id, base.name, types, colors, attacks, baseStat, EVStat, imgFront, imgBack);
   }
 
   parseAttack = (attack) => {
