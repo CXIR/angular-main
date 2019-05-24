@@ -1,18 +1,18 @@
 export class Attack {
 
-    id       : number;
-    name     : string;
-    type     : string;
-    pp       : number;
-    power    : number;
-    accuracy : number;
+    id: number;
+    name: string;
+    type: string;
+    pp: number;
+    power: number;
+    accuracy: number;
 
-    constructor( id       : number, 
-                 name     : string, 
-                 type     : string, 
-                 pp       : number, 
-                 power    : number, 
-                 accuracy : number ) {
+    constructor( id: number,
+                 name: string,
+                 type: string,
+                 pp: number,
+                 power: number,
+                 accuracy: number ) {
 
         this.id       = id;
         this.name     = name;

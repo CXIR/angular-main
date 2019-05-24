@@ -5,7 +5,6 @@ import {SpeciesPokemon} from '../models/speciesPokemon';
 import {Statistiques} from '../models/statistiques';
 import {Attack} from '../models/attack';
 import {map} from 'rxjs/operators';
-import { Observable } from 'rxjs';
 
 
 @Injectable()
@@ -13,15 +12,6 @@ export class PokemonService {
   baseURL: string;
   constructor(private http: HttpClient) {
     this.baseURL = 'https://pokeapi.co/api/v2/';
-  }
-
-  getPokemons() {
-
-    return this.http.get(this.baseURL + 'generation/1').pipe( 
-      
-      map(data => {
-        this.parseList(data)
-    }))
   }
 
   getPokemonsNames() {
@@ -36,20 +26,6 @@ export class PokemonService {
     for (const res of results) {
       const p = res.name;
       pokemons.push(p);
-    }
-    return pokemons;
-  }
-  
-  parseList(data) {
-    //const pokemons: BasePokemon[] = [];
-    const pokemons : string[] = []
-    const results = data.pokemon_species;
-
-    for (const res of results) {
-      pokemons.push(res.name)
-      // const p = this.getOnePokemon(res.name).pipe(map(pokemon => {
-      //     pokemons.push(pokemon)
-      // }))
     }
     return pokemons;
   }

@@ -1,12 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 
-import { Pokemon   }  from 'src/models/pokemon'
-import { AttackLog }  from 'src/models/attack-log'
+import {Pokemon} from 'src/models/pokemon';
+import {AttackLog} from 'src/models/attack-log';
 
-import { BattleService  } from 'src/services/battle.service'
-import { Subscription   } from 'rxjs';
-import { PokemonService } from 'src/services/pokemon.service';
-import { ActivatedRoute } from '@angular/router';
+import {BattleService} from 'src/services/battle.service';
+import {Subscription} from 'rxjs';
+import {PokemonService} from 'src/services/pokemon.service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-arena',
@@ -19,91 +19,91 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ArenaComponent implements OnInit, OnDestroy {
 
-  title = 'Les Trois Cafés Gourmand'
+  title = 'Les Trois Cafés Gourmand';
 
-  winner : Pokemon
+  winner: Pokemon;
 
-  pokemon1 : Pokemon
-  pokemon2 : Pokemon
+  pokemon1: Pokemon;
+  pokemon2: Pokemon;
 
-  attacks   : AttackLog[] = []
-  log       : AttackLog
+  attacks: AttackLog[] = [];
+  log: AttackLog;
 
-  stopped : boolean
-  start   : Date
+  stopped: boolean;
+  start: Date;
 
-  subscription : Subscription
+  subscription: Subscription;
 
-  constructor( private battleService  : BattleService,
-               private pokemonService : PokemonService,
-               private route          : ActivatedRoute ) { }
+  constructor( private battleService: BattleService,
+               private pokemonService: PokemonService,
+               private route: ActivatedRoute ) { }
 
-  ngOnInit(){
-    let name1 = this.route.snapshot.paramMap.get('pokemon1name') || 'pikachu'
-    let name2 = this.route.snapshot.paramMap.get('pokemon2name') || 'raichu'
+  ngOnInit() {
+    const name1 = this.route.snapshot.paramMap.get('pokemon1name') || 'pikachu';
+    const name2 = this.route.snapshot.paramMap.get('pokemon2name') || 'raichu';
 
     this.pokemonService.getOnePokemon(name1).subscribe({
       next: pokemon => {
-        this.pokemon1 = new Pokemon(pokemon)
+        this.pokemon1 = new Pokemon(pokemon);
       },
       complete: () => {
-        this. configureBattle()
+        this. configureBattle();
       }
-    })
+    });
 
     this.pokemonService.getOnePokemon(name2).subscribe({
       next: pokemon => {
-        this.pokemon2 = new Pokemon(pokemon)
+        this.pokemon2 = new Pokemon(pokemon);
       },
       complete: () => {
-        this. configureBattle()
+        this. configureBattle();
       }
-    })
+    });
 
-    this.stopped = true
+    this.stopped = true;
   }
 
-  configureBattle(){
+  configureBattle() {
 
-    if(this.pokemon1 && this.pokemon2) {
-      this.battleService.configureBattle(this.pokemon1, this.pokemon2)
+    if (this.pokemon1 && this.pokemon2) {
+      this.battleService.configureBattle(this.pokemon1, this.pokemon2);
     }
   }
 
   actOnFight() {
 
-    if(this.start == undefined) this.start = new Date()
-    
-    this.stopped = !this.stopped
-    this.battleService.isStopped = this.stopped
+    if (this.start === undefined) { this.start = new Date(); }
 
-    if(!this.subscription) {
+    this.stopped = !this.stopped;
+    this.battleService.isStopped = this.stopped;
+
+    if (!this.subscription) {
 
       this.subscription = this.battleService
       .fight(1000)
       .subscribe({
-  
+
         next : log => {
-  
-        this.attacks.push(log)
-        this.log = log
+
+        this.attacks.push(log);
+        this.log = log;
         },
         complete : () => this.winner = this.battleService.winner
-        })
+        });
     }
   }
 
-  setColor(color : string){
-    return { 'color' : color }
+  setColor(color: string) {
+    return { color : color };
   }
 
 
-  ngOnDestroy(){
+  ngOnDestroy() {
 
-    this.battleService.isStopped = true
+    this.battleService.isStopped = true;
 
-    if(this.subscription){
-      this.subscription.unsubscribe()
+    if (this.subscription) {
+      this.subscription.unsubscribe();
     }
   }
 }
