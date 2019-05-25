@@ -47,7 +47,7 @@ export class PokemonSelecterComponent implements OnInit {
 
       this.pokemon1 = pokemon
     } 
-    else if (!this.pokemon2 && pokemon != this.pokemon2) {
+    else if (!this.pokemon2 && pokemon != this.pokemon1) {
 
       this.pokemon2 = pokemon
       this.router.navigateByUrl('/arena/' + this.pokemon1.name +'/' + this.pokemon2.name)
@@ -57,8 +57,9 @@ export class PokemonSelecterComponent implements OnInit {
   pokemonSelected(pokemon: BasePokemon) {
 
     if (pokemon === this.pokemon1 || pokemon === this.pokemon2) {
-      return 'border-info';
+      return 'bg-info'
     }
+    else return 'bg-light'
   }
 
   collectionIsEmpty() {

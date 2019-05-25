@@ -24,10 +24,9 @@ export class BattleService {
   }
 
   fight(interval: number) {
-
     return new Observable<AttackLog>(observer => {
 
-          setInterval(() => {
+          const inter = setInterval(() => {
 
             if (!this.isStopped) {
               if (this.pokemon1.life !== 0 && this.pokemon2.life !== 0) {
@@ -35,6 +34,7 @@ export class BattleService {
                 observer.next(this.attack());
               } else {
                 this.winner = this.pokemon1.life === 0 ? this.pokemon2 : this.pokemon1;
+                clearInterval(inter);
                 observer.complete();
               }
             }
